@@ -19,6 +19,10 @@ If you need to install `bsdtar`, use the following command:
 
     brew install https://raw.github.com/Homebrew/homebrew-dupes/master/libarchive.rb
 
+To add `package.box` with name `debian-70` into vagrant:
+
+    vagrant box add "debian-70" package.box
+
 ### Notes
 
 This script basted on original Carl's [repo](https://github.com/cal/vagrant-ubuntu-precise-64) and with some tweaks to be compatible Debian 7.0.
