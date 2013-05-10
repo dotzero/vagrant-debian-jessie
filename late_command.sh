@@ -18,7 +18,7 @@ gem install chef --no-rdoc --no-ri
 
 # display login promt after boot
 sed "s/quiet splash//" /etc/default/grub > /tmp/grub
-mv /tmp/grub /etc/default/grub
+sed "s/GRUB_TIMEOUT=[0-9]/GRUB_TIMEOUT=0/" /tmp/grub > /etc/default/grub
 update-grub
 
 # clean up
