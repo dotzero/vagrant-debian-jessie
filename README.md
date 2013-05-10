@@ -2,7 +2,7 @@
 
 This script will: 
 
- 1. download the Debian 7.0 "Wheezy" server, 64bit iso
+ 1. download the `Debian 7.0 "Wheezy"` server, 64bit iso
  2. ... do some magic to turn it into a vagrant box file
  3. output package.box 
 
@@ -11,9 +11,13 @@ This script will:
     ./build.sh
 
 This should do everything you need. If you don't have 
-mkisofs, install [homebrew](http://mxcl.github.com/homebrew/), then:
+`mkisofs`, install [homebrew](http://mxcl.github.com/homebrew/), then:
 
     brew install cdrtools
+
+If you need to install `bsdtar`, use the following command:
+
+    brew install https://raw.github.com/Homebrew/homebrew-dupes/master/libarchive.rb
 
 ### Notes
 
