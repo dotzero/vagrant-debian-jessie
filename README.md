@@ -15,9 +15,10 @@ This should do everything you need. If you don't have
 
     brew install cdrtools
 
-If you need to install `bsdtar`, use the following command:
+If you need to install `bsdtar`, use the following commands:
 
-    brew install https://raw.github.com/Homebrew/homebrew-dupes/master/libarchive.rb
+    brew update
+    brew install libarchive
 
 To add `package.box` with name `debian-70` into vagrant:
 
