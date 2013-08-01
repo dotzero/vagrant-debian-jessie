@@ -15,10 +15,9 @@ This should do everything you need. If you don't have
 
     brew install cdrtools
 
-If you need to install `bsdtar`, use the following commands:
+You'll need to install p7zip:
 
-    brew update
-    brew install libarchive
+    brew install p7zip
 
 To add `package.box` with name `debian-71` into vagrant:
 
