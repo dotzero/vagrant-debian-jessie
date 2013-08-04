@@ -4,6 +4,7 @@
 hash mkisofs 2>/dev/null || { echo >&2 "ERROR: mkisofs not found.  Aborting."; exit 1; }
 hash vagrant 2>/dev/null || { echo >&2 "ERROR: vagrant not found.  Aborting."; exit 1; }
 hash VBoxManage 2>/dev/null || { echo >&2 "ERROR: VBoxManage not found.  Aborting."; exit 1; }
+hash 7z 2>/dev/null || { echo >&2 "ERROR: 7z not found. Aborting."; exit 1; } 
 
 set -o nounset
 set -o errexit
@@ -22,6 +23,15 @@ FOLDER_VBOX="${FOLDER_BUILD}/vbox"
 FOLDER_ISO_CUSTOM="${FOLDER_BUILD}/iso/custom"
 FOLDER_ISO_INITRD="${FOLDER_BUILD}/iso/initrd"
 
+if [ $OSTYPE = "linux-gnu" ];
+then
+  MD5="md5sum"
+  ISO_GUESTADDITIONS="/usr/share/virtualbox/VBoxGuestAdditions.iso"
+else
+  MD5="md5 -q"
+  ISO_GUESTADDITIONS="/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso"
+fi
+
 # start with a clean slate
 if [ -d "${FOLDER_BUILD}" ]; then
   echo "Cleaning build directory ..."
@@ -39,7 +49,6 @@ mkdir -p "${FOLDER_ISO_INITRD}"
 
 ISO_FILENAME="${FOLDER_ISO}/`basename ${ISO_URL}`"
 INITRD_FILENAME="${FOLDER_ISO}/initrd.gz"
-ISO_GUESTADDITIONS="/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso"
 
 # download the installation disk if you haven't already or it is corrupted somehow
 echo "Downloading `basename ${ISO_URL}` ..."
@@ -47,7 +56,8 @@ if [ ! -e "${ISO_FILENAME}" ]; then
   curl --output "${ISO_FILENAME}" -L "${ISO_URL}"
 
   # make sure download is right...
-  ISO_HASH=`md5 -q "${ISO_FILENAME}"`
+
+  ISO_HASH=`$MD5 "${ISO_FILENAME}" | cut -d ' ' -f 1`
   if [ "${ISO_MD5}" != "${ISO_HASH}" ]; then
     echo "ERROR: MD5 does not match. Got ${ISO_HASH} instead of ${ISO_MD5}. Aborting."
     exit 1
@@ -58,25 +68,12 @@ fi
 echo "Creating Custom ISO"
 if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
 
-  echo "Untarring downloaded ISO ..."
-  tar -C "${FOLDER_ISO_CUSTOM}" -xf "${ISO_FILENAME}"
+  echo "Using 7zip"
+  7z x "${ISO_FILENAME}" -o"${FOLDER_ISO_CUSTOM}"
 
-  # in osx lion 10.7.4, tar won't extract anything and will fail silently. If that happens, look for a newer version of bsd tar
-  if [ ! `ls $FOLDER_ISO_CUSTOM` ]; then
-      TAR_COMMAND=tar
-      if [ -x '/usr/local/bin/bsdtar' ];
-      then
-          LOCAL_BSD_TAR=/usr/local/bin/bsdtar
-      else
-          LOCAL_BSD_TAR=/usr/bin/bsdtar
-      fi
-      echo "Tar failed to extract ISO, falling back to $LOCAL_BSD_TAR"
-      "${LOCAL_BSD_TAR}" -C "${FOLDER_ISO_CUSTOM}" -xf "${ISO_FILENAME}"
-  fi
-
-  # If that still didn't work, you have to update tar
-  if [ ! `ls -A $FOLDER_ISO_CUSTOM` ]; then
-    echo "Error with extracting the ISO file with your version of tar. Try updating to libarchive 3.0.4 (using e.g. the homebrew-dupes project)"
+  # If that didn't work, you have to update p7zip
+  if [ ! -e $FOLDER_ISO_CUSTOM ]; then
+    echo "Error with extracting the ISO file with your version of p7zip. Try updating to the latest version."
     exit 1
   fi
 
@@ -90,7 +87,7 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   # stick in our new initrd.gz
   echo "Installing new initrd.gz ..."
   cd "${FOLDER_ISO_INITRD}"
-  gunzip -c "${FOLDER_ISO_CUSTOM}/install/initrd.gz.org" | cpio -id
+  gunzip -c "${FOLDER_ISO_CUSTOM}/install/initrd.gz.org" | cpio -id || true
   cd "${FOLDER_BASE}"
   cp preseed.cfg "${FOLDER_ISO_INITRD}/preseed.cfg"
   cd "${FOLDER_ISO_INITRD}"
