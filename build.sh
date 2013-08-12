@@ -4,7 +4,7 @@
 hash mkisofs 2>/dev/null || { echo >&2 "ERROR: mkisofs not found.  Aborting."; exit 1; }
 hash vagrant 2>/dev/null || { echo >&2 "ERROR: vagrant not found.  Aborting."; exit 1; }
 hash VBoxManage 2>/dev/null || { echo >&2 "ERROR: VBoxManage not found.  Aborting."; exit 1; }
-hash 7z 2>/dev/null || { echo >&2 "ERROR: 7z not found. Aborting."; exit 1; } 
+hash 7z 2>/dev/null || { echo >&2 "ERROR: 7z not found. Aborting."; exit 1; }
 
 set -o nounset
 set -o errexit
@@ -38,6 +38,10 @@ if [ -d "${FOLDER_BUILD}" ]; then
   chmod -R u+w "${FOLDER_BUILD}"
   rm -rf "${FOLDER_BUILD}"
   mkdir -p "${FOLDER_BUILD}"
+fi
+if [ -f "${FOLDER_BASE}/package.box" ]; then
+  echo "Removing old package.box ..."
+  rm "${FOLDER_BASE}/package.box"
 fi
 
 # Setting things back up again
