@@ -37,11 +37,18 @@ if [ -d "${FOLDER_BUILD}" ]; then
   echo "Cleaning build directory ..."
   chmod -R u+w "${FOLDER_BUILD}"
   rm -rf "${FOLDER_BUILD}"
-  mkdir -p "${FOLDER_BUILD}"
+fi
+if [ -f "${FOLDER_ISO}/custom.iso" ]; then
+  echo "Removing custom iso ..."
+  rm "${FOLDER_ISO}/custom.iso"
 fi
 if [ -f "${FOLDER_BASE}/package.box" ]; then
   echo "Removing old package.box ..."
   rm "${FOLDER_BASE}/package.box"
+fi
+if VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
+  echo "Unregistering vm ..."
+  VBoxManage unregistervm "${BOX}"
 fi
 
 # Setting things back up again
