@@ -1,10 +1,18 @@
 #!/bin/bash
 
 # make sure we have dependencies
-hash mkisofs 2>/dev/null || hash genisoimage 2>/dev/null && alias mkisofs=genisoimage || { echo >&2 "ERROR: mkisofs or genisoimage not found.  Aborting."; exit 1; }
 hash vagrant 2>/dev/null || { echo >&2 "ERROR: vagrant not found.  Aborting."; exit 1; }
 hash VBoxManage 2>/dev/null || { echo >&2 "ERROR: VBoxManage not found.  Aborting."; exit 1; }
 hash 7z 2>/dev/null || { echo >&2 "ERROR: 7z not found. Aborting."; exit 1; }
+
+if hash mkisofs 2>/dev/null; then
+  MKISOFS="$(which mkisofs)"
+elif hash genisoimage 2>/dev/null; then
+  MKISOFS="$(which genisoimage)"
+else
+  echo >&2 "ERROR: mkisofs or genisoimage not found.  Aborting."
+  exit 1
+fi
 
 set -o nounset
 set -o errexit
@@ -48,7 +56,7 @@ if [ -f "${FOLDER_BASE}/package.box" ]; then
 fi
 if VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
   echo "Unregistering vm ..."
-  VBoxManage unregistervm "${BOX}"
+  VBoxManage unregistervm "${BOX}" --delete
 fi
 
 # Setting things back up again
@@ -65,14 +73,13 @@ INITRD_FILENAME="${FOLDER_ISO}/initrd.gz"
 echo "Downloading `basename ${ISO_URL}` ..."
 if [ ! -e "${ISO_FILENAME}" ]; then
   curl --output "${ISO_FILENAME}" -L "${ISO_URL}"
+fi
 
-  # make sure download is right...
-
-  ISO_HASH=`$MD5 "${ISO_FILENAME}" | cut -d ' ' -f 1`
-  if [ "${ISO_MD5}" != "${ISO_HASH}" ]; then
-    echo "ERROR: MD5 does not match. Got ${ISO_HASH} instead of ${ISO_MD5}. Aborting."
-    exit 1
-  fi
+# make sure download is right...
+ISO_HASH=`$MD5 "${ISO_FILENAME}" | cut -d ' ' -f 1`
+if [ "${ISO_MD5}" != "${ISO_HASH}" ]; then
+  echo "ERROR: MD5 does not match. Got ${ISO_HASH} instead of ${ISO_MD5}. Aborting."
+  exit 1
 fi
 
 # customize it
@@ -122,7 +129,7 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   cp "${FOLDER_BASE}/late_command.sh" "${FOLDER_ISO_CUSTOM}"
 
   echo "Running mkisofs ..."
-  mkisofs -r -V "Custom Debian Install CD" \
+  $MKISOFS -r -V "Custom Debian Install CD" \
     -cache-inodes -quiet \
     -J -l -b isolinux/isolinux.bin \
     -c isolinux/boot.cat -no-emul-boot \
