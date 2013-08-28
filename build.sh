@@ -50,9 +50,9 @@ if [ -f "${FOLDER_ISO}/custom.iso" ]; then
   echo "Removing custom iso ..."
   rm "${FOLDER_ISO}/custom.iso"
 fi
-if [ -f "${FOLDER_BASE}/package.box" ]; then
-  echo "Removing old package.box ..."
-  rm "${FOLDER_BASE}/package.box"
+if [ -f "${FOLDER_BASE}/${BOX}.box" ]; then
+  echo "Removing old ${BOX}.box" ...
+  rm "${FOLDER_BASE}/${BOX}.box"
 fi
 if VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
   echo "Unregistering vm ..."
@@ -237,7 +237,7 @@ if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
 fi
 
 echo "Building Vagrant Box ..."
-vagrant package --base "${BOX}"
+vagrant package --base "${BOX}" --output "${BOX}.box"
 
 # references:
 # http://blog.ericwhite.ca/articles/2009/11/unattended-debian-lenny-install/
