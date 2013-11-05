@@ -173,7 +173,7 @@ if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
     --name "SATA Controller" \
     --add sata \
     --controller IntelAhci \
-    --sataportcount 1 \
+    --portcount 1 \
     --hostiocache off
 
   VBoxManage createhd \
