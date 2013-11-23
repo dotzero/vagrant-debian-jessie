@@ -5,6 +5,8 @@ hash vagrant 2>/dev/null || { echo >&2 "ERROR: vagrant not found.  Aborting."; e
 hash VBoxManage 2>/dev/null || { echo >&2 "ERROR: VBoxManage not found.  Aborting."; exit 1; }
 hash 7z 2>/dev/null || { echo >&2 "ERROR: 7z not found. Aborting."; exit 1; }
 
+VBOX_VERSION="$(VBoxManage --version)"
+
 if hash mkisofs 2>/dev/null; then
   MKISOFS="$(which mkisofs)"
 elif hash genisoimage 2>/dev/null; then
@@ -30,6 +32,13 @@ FOLDER_BUILD="${FOLDER_BASE}/build"
 FOLDER_VBOX="${FOLDER_BUILD}/vbox"
 FOLDER_ISO_CUSTOM="${FOLDER_BUILD}/iso/custom"
 FOLDER_ISO_INITRD="${FOLDER_BUILD}/iso/initrd"
+
+# Parameter changes from 4.2 to 4.3
+if [[ "$VBOX_VERSION" < 4.3 ]]; then
+  PORTCOUNT="--sataportcount 1"
+else
+  PORTCOUNT="--portcount 1"
+fi
 
 if [ $OSTYPE = "linux-gnu" ];
 then
@@ -173,7 +182,7 @@ if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
     --name "SATA Controller" \
     --add sata \
     --controller IntelAhci \
-    --portcount 1 \
+    $PORTCOUNT \
     --hostiocache off
 
   VBoxManage createhd \
