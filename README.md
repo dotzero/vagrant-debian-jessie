@@ -22,9 +22,9 @@ This should do everything you need. If you don't have `mkisofs` or `p7zip`, inst
     brew install cdrtools
     brew install p7zip
 
-To add `debian-wheezy-64.box` with name `debian-72` into vagrant:
+To add `debian-wheezy-64.box` with name `debian-73` into vagrant:
 
-    vagrant box add "debian-72" debian-wheezy-64.box
+    vagrant box add "debian-73" debian-wheezy-64.box
 
 ## Usage on Linux
 
@@ -35,9 +35,9 @@ This should do everything you need. If you don't have `mkisofs` or `p7zip`:
     sudo apt-get install genisoimage
     sudo apt-get install p7zip-full
 
-To add `debian-wheezy-64.box` with name `debian-72` into vagrant:
+To add `debian-wheezy-64.box` with name `debian-73` into vagrant:
 
-    vagrant box add "debian-72" debian-wheezy-64.box
+    vagrant box add "debian-73" debian-wheezy-64.box
 
 ### Notes
 
