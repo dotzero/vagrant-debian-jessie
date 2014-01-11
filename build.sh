@@ -24,6 +24,9 @@ set -o errexit
 BOX="debian-wheezy-64"
 ISO_URL="http://cdimage.debian.org/debian-cd/7.3.0/amd64/iso-cd/debian-7.3.0-amd64-netinst.iso"
 ISO_MD5="72473e8a5e65b61acc7efde90d9f71d1"
+# Try preseed from env if set, otherwise fallback to default
+DEFAULT_PRESEED="preseed.cfg"
+PRESEED="${PRESEED:-"$DEFAULT_PRESEED"}"
 
 # location, location, location
 FOLDER_BASE=`pwd`
@@ -114,7 +117,10 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   cd "${FOLDER_ISO_INITRD}"
   gunzip -c "${FOLDER_ISO_CUSTOM}/install/initrd.gz.org" | cpio -id || true
   cd "${FOLDER_BASE}"
-  cp preseed.cfg "${FOLDER_ISO_INITRD}/preseed.cfg"
+  if [ "${PRESEED}" != "${DEFAULT_PRESEED}" ] ; then
+    echo "Using custom preseed file ${PRESEED}"
+  fi
+  cp "${PRESEED}" "${FOLDER_ISO_INITRD}/preseed.cfg"
   cd "${FOLDER_ISO_INITRD}"
   find . | cpio --create --format='newc' | gzip  > "${FOLDER_ISO_CUSTOM}/install/initrd.gz"
 
