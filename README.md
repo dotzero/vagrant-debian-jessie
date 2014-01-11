@@ -21,6 +21,10 @@ This should do everything you need. If you don't have `mkisofs` or `p7zip`, inst
 
     brew install cdrtools
     brew install p7zip
+    
+Also, you can supply your own preseed.cfg, e.g. in case if you need some customizations for your private base box (user name, passwords etc.):
+    
+    PRESEED=/path/to/my-preseed.cfg ./build.sh
 
 To add `debian-wheezy-64.box` with name `debian-73` into vagrant:
 
@@ -34,6 +38,10 @@ This should do everything you need. If you don't have `mkisofs` or `p7zip`:
 
     sudo apt-get install genisoimage
     sudo apt-get install p7zip-full
+    
+Also, you can supply your own preseed.cfg, e.g. in case if you need some customizations for your private base box (user name, passwords etc.):
+    
+    PRESEED=/path/to/my-preseed.cfg ./build.sh
 
 To add `debian-wheezy-64.box` with name `debian-73` into vagrant:
 
