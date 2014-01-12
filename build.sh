@@ -27,6 +27,12 @@ ISO_MD5="72473e8a5e65b61acc7efde90d9f71d1"
 # Try preseed from env if set, otherwise fallback to default
 DEFAULT_PRESEED="preseed.cfg"
 PRESEED="${PRESEED:-"$DEFAULT_PRESEED"}"
+# Use headless mode by default
+HEADLESS_OPT="--type headless"
+if [ "x${VM_GUI}" == "xyes" -o "x${VM_GUI}" == "x1" ] ; then
+    HEADLESS_OPT=""
+fi
+
 
 # location, location, location
 FOLDER_BASE=`pwd`
@@ -204,7 +210,7 @@ if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
     --type hdd \
     --medium "${FOLDER_VBOX}/${BOX}/${BOX}.vdi"
 
-  VBoxManage startvm "${BOX}" --type headless
+  VBoxManage startvm "${BOX}" "${HEADLESS_OPT}"
 
   echo -n "Waiting for installer to finish "
   while VBoxManage list runningvms | grep "${BOX}" >/dev/null; do

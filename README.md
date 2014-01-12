@@ -50,7 +50,7 @@ The following variables are supported:
     PRESEED — path to custom preseed file. May be useful when if you need some customizations for your private base box (user name, passwords etc.):
 
     LATE_CMD — path to custom late_comman.sh. May be useful when if you need some customizations for your private base box (user name, passwords etc.):
-    
+
     VM_GUI — if set to "yes" or "1", disables headless mode for vm. May be useful for debugging installer
 
 
