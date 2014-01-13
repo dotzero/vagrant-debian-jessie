@@ -22,10 +22,6 @@ This should do everything you need. If you don't have `mkisofs` or `p7zip`, inst
     brew install cdrtools
     brew install p7zip
     
-Also, you can supply your own preseed.cfg, e.g. in case if you need some customizations for your private base box (user name, passwords etc.):
-    
-    PRESEED=/path/to/my-preseed.cfg ./build.sh
-
 To add `debian-wheezy-64.box` with name `debian-73` into vagrant:
 
     vagrant box add "debian-73" debian-wheezy-64.box
@@ -39,13 +35,24 @@ This should do everything you need. If you don't have `mkisofs` or `p7zip`:
     sudo apt-get install genisoimage
     sudo apt-get install p7zip-full
     
-Also, you can supply your own preseed.cfg, e.g. in case if you need some customizations for your private base box (user name, passwords etc.):
-    
-    PRESEED=/path/to/my-preseed.cfg ./build.sh
-
 To add `debian-wheezy-64.box` with name `debian-73` into vagrant:
 
     vagrant box add "debian-73" debian-wheezy-64.box
+
+## Environment variables
+
+You can affect the default behaviour of the script using environment variables:
+
+    VAR=value ./build.sh
+
+The following variables are supported:
+
+    PRESEED — path to custom preseed file. May be useful when if you need some customizations for your private base box (user name, passwords etc.):
+
+    LATE_CMD — path to custom late_comman.sh. May be useful when if you need some customizations for your private base box (user name, passwords etc.):
+    
+    VM_GUI — if set to "yes" or "1", disables headless mode for vm. May be useful for debugging installer
+
 
 ### Notes
 

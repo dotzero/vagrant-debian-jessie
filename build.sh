@@ -36,6 +36,10 @@ FOLDER_VBOX="${FOLDER_BUILD}/vbox"
 FOLDER_ISO_CUSTOM="${FOLDER_BUILD}/iso/custom"
 FOLDER_ISO_INITRD="${FOLDER_BUILD}/iso/initrd"
 
+# late_command.sh path from env if set
+DEFAULT_LATE_CMD="${FOLDER_BASE}/late_command.sh"
+LATE_CMD="${LATE_CMD:-"$DEFAULT_LATE_CMD"}"
+
 # Parameter changes from 4.2 to 4.3
 if [[ "$VBOX_VERSION" < 4.3 ]]; then
   PORTCOUNT="--sataportcount 1"
@@ -139,7 +143,7 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   # add late_command script
   echo "Add late_command script ..."
   chmod u+w "${FOLDER_ISO_CUSTOM}"
-  cp "${FOLDER_BASE}/late_command.sh" "${FOLDER_ISO_CUSTOM}"
+  cp "${LATE_CMD}" "${FOLDER_ISO_CUSTOM}/late_command.sh"
 
   echo "Running mkisofs ..."
   $MKISOFS -r -V "Custom Debian Install CD" \
