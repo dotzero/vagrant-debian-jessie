@@ -24,6 +24,15 @@ set -o errexit
 BOX="debian-wheezy-64"
 ISO_URL="http://cdimage.debian.org/debian-cd/7.3.0/amd64/iso-cd/debian-7.3.0-amd64-netinst.iso"
 ISO_MD5="72473e8a5e65b61acc7efde90d9f71d1"
+# Try preseed from env if set, otherwise fallback to default
+DEFAULT_PRESEED="preseed.cfg"
+PRESEED="${PRESEED:-"$DEFAULT_PRESEED"}"
+# Use headless mode by default
+STARTVM="VBoxManage startvm --type headless"
+if [ "x${VM_GUI}" == "xyes" -o "x${VM_GUI}" == "x1" ] ; then
+    STARTVM="VBoxManage startvm ${BOX}"
+fi
+
 
 # location, location, location
 FOLDER_BASE=`pwd`
@@ -32,6 +41,10 @@ FOLDER_BUILD="${FOLDER_BASE}/build"
 FOLDER_VBOX="${FOLDER_BUILD}/vbox"
 FOLDER_ISO_CUSTOM="${FOLDER_BUILD}/iso/custom"
 FOLDER_ISO_INITRD="${FOLDER_BUILD}/iso/initrd"
+
+# late_command.sh path from env if set
+DEFAULT_LATE_CMD="${FOLDER_BASE}/late_command.sh"
+LATE_CMD="${LATE_CMD:-"$DEFAULT_LATE_CMD"}"
 
 # Parameter changes from 4.2 to 4.3
 if [[ "$VBOX_VERSION" < 4.3 ]]; then
@@ -114,7 +127,10 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   cd "${FOLDER_ISO_INITRD}"
   gunzip -c "${FOLDER_ISO_CUSTOM}/install/initrd.gz.org" | cpio -id || true
   cd "${FOLDER_BASE}"
-  cp preseed.cfg "${FOLDER_ISO_INITRD}/preseed.cfg"
+  if [ "${PRESEED}" != "${DEFAULT_PRESEED}" ] ; then
+    echo "Using custom preseed file ${PRESEED}"
+  fi
+  cp "${PRESEED}" "${FOLDER_ISO_INITRD}/preseed.cfg"
   cd "${FOLDER_ISO_INITRD}"
   find . | cpio --create --format='newc' | gzip  > "${FOLDER_ISO_CUSTOM}/install/initrd.gz"
 
@@ -133,7 +149,7 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   # add late_command script
   echo "Add late_command script ..."
   chmod u+w "${FOLDER_ISO_CUSTOM}"
-  cp "${FOLDER_BASE}/late_command.sh" "${FOLDER_ISO_CUSTOM}"
+  cp "${LATE_CMD}" "${FOLDER_ISO_CUSTOM}/late_command.sh"
 
   echo "Running mkisofs ..."
   $MKISOFS -r -V "Custom Debian Install CD" \
@@ -194,7 +210,7 @@ if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
     --type hdd \
     --medium "${FOLDER_VBOX}/${BOX}/${BOX}.vdi"
 
-  VBoxManage startvm "${BOX}" --type headless
+  ${STARTVM}
 
   echo -n "Waiting for installer to finish "
   while VBoxManage list runningvms | grep "${BOX}" >/dev/null; do

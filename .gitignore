@@ -5,3 +5,4 @@ iso/
 .DS_Store
 
 *.box
+*.sw?
