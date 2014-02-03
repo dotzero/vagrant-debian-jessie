@@ -24,15 +24,6 @@ set -o errexit
 BOX="debian-wheezy-64"
 ISO_URL="http://cdimage.debian.org/debian-cd/7.3.0/amd64/iso-cd/debian-7.3.0-amd64-netinst.iso"
 ISO_MD5="72473e8a5e65b61acc7efde90d9f71d1"
-# Try preseed from env if set, otherwise fallback to default
-DEFAULT_PRESEED="preseed.cfg"
-PRESEED="${PRESEED:-"$DEFAULT_PRESEED"}"
-# Use headless mode by default
-STARTVM="VBoxManage startvm --type headless"
-if [ "x${VM_GUI}" == "xyes" -o "x${VM_GUI}" == "x1" ] ; then
-    STARTVM="VBoxManage startvm ${BOX}"
-fi
-
 
 # location, location, location
 FOLDER_BASE=`pwd`
@@ -42,7 +33,19 @@ FOLDER_VBOX="${FOLDER_BUILD}/vbox"
 FOLDER_ISO_CUSTOM="${FOLDER_BUILD}/iso/custom"
 FOLDER_ISO_INITRD="${FOLDER_BUILD}/iso/initrd"
 
-# late_command.sh path from env if set
+# Env option: Use headless mode or GUI
+VM_GUI="${VM_GUI:-}"
+if [ "x${VM_GUI}" == "xyes" ] || [ "x${VM_GUI}" == "x1" ]; then
+  STARTVM="VBoxManage startvm ${BOX}"
+else
+  STARTVM="VBoxManage startvm ${BOX} --type headless"
+fi
+
+# Env option: Use custom preseed.cfg or default
+DEFAULT_PRESEED="preseed.cfg"
+PRESEED="${PRESEED:-"$DEFAULT_PRESEED"}"
+
+# Env option: Use custom late_command.sh or default
 DEFAULT_LATE_CMD="${FOLDER_BASE}/late_command.sh"
 LATE_CMD="${LATE_CMD:-"$DEFAULT_LATE_CMD"}"
 
@@ -53,8 +56,7 @@ else
   PORTCOUNT="--portcount 1"
 fi
 
-if [ $OSTYPE = "linux-gnu" ];
-then
+if [ "$OSTYPE" = "linux-gnu" ]; then
   MD5="md5sum"
 else
   MD5="md5 -q"

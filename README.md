@@ -22,9 +22,9 @@ This should do everything you need. If you don't have `mkisofs` or `p7zip`, inst
     brew install cdrtools
     brew install p7zip
     
-To add `debian-wheezy-64.box` with name `debian-73` into vagrant:
+To add `debian-wheezy-64.box` with name `debian-wheezy` into vagrant:
 
-    vagrant box add "debian-73" debian-wheezy-64.box
+    vagrant box add "debian-wheezy" debian-wheezy-64.box
 
 ## Usage on Linux
 
@@ -35,9 +35,9 @@ This should do everything you need. If you don't have `mkisofs` or `p7zip`:
     sudo apt-get install genisoimage
     sudo apt-get install p7zip-full
     
-To add `debian-wheezy-64.box` with name `debian-73` into vagrant:
+To add `debian-wheezy-64.box` with name `debian-wheezy` into vagrant:
 
-    vagrant box add "debian-73" debian-wheezy-64.box
+    vagrant box add "debian-wheezy" debian-wheezy-64.box
 
 ## Environment variables
 
@@ -47,11 +47,11 @@ You can affect the default behaviour of the script using environment variables:
 
 The following variables are supported:
 
-    PRESEED — path to custom preseed file. May be useful when if you need some customizations for your private base box (user name, passwords etc.):
+* `PRESEED` — path to custom preseed file. May be useful when if you need some customizations for your private base box (user name, passwords etc.);
 
-    LATE_CMD — path to custom late_command.sh. May be useful when if you need some customizations for your private base box (user name, passwords etc.):
+* `LATE_CMD` — path to custom late_command.sh. May be useful when if you need some customizations for your private base box (user name, passwords etc.);
 
-    VM_GUI — if set to "yes" or "1", disables headless mode for vm. May be useful for debugging installer
+* `VM_GUI` — if set to `yes` or `1`, disables headless mode for vm. May be useful for debugging installer;
 
 
 ### Notes
