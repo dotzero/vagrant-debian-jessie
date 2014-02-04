@@ -156,7 +156,7 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   cp "${LATE_CMD}" "${FOLDER_ISO_CUSTOM}/late_command.sh"
 
   echo "Running mkisofs ..."
-  $MKISOFS -r -V "Custom Debian Install CD" \
+  "$MKISOFS" -r -V "Custom Debian Install CD" \
     -cache-inodes -quiet \
     -J -l -b isolinux/isolinux.bin \
     -c isolinux/boot.cat -no-emul-boot \
