@@ -58,6 +58,8 @@ fi
 
 if [ "$OSTYPE" = "linux-gnu" ]; then
   MD5="md5sum"
+elif [ "$OSTYPE" = "msys" ]; then
+  MD5="md5 -l"
 else
   MD5="md5 -q"
 fi
@@ -127,7 +129,7 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   # stick in our new initrd.gz
   echo "Installing new initrd.gz ..."
   cd "${FOLDER_ISO_INITRD}"
-  gunzip -c "${FOLDER_ISO_CUSTOM}/install/initrd.gz.org" | cpio -id || true
+  gunzip -c "${FOLDER_ISO_CUSTOM}/install/initrd.gz.org" | cpio -i --make-directories || true
   cd "${FOLDER_BASE}"
   if [ "${PRESEED}" != "${DEFAULT_PRESEED}" ] ; then
     echo "Using custom preseed file ${PRESEED}"
@@ -154,7 +156,7 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   cp "${LATE_CMD}" "${FOLDER_ISO_CUSTOM}/late_command.sh"
 
   echo "Running mkisofs ..."
-  $MKISOFS -r -V "Custom Debian Install CD" \
+  "$MKISOFS" -r -V "Custom Debian Install CD" \
     -cache-inodes -quiet \
     -J -l -b isolinux/isolinux.bin \
     -c isolinux/boot.cat -no-emul-boot \
