@@ -32,6 +32,18 @@ To add `debian-wheezy-64.box` with name `debian-wheezy` into vagrant:
 
 This should do everything you need. If you don't have `mkisofs` or `p7zip`:
 
+## Usage on Windows (under cygwin/git shell)
+
+Windows tools:
+
+ * cpio: [](http://gnuwin32.sourceforge.net/packages/cpio.htm)
+ * md5: [](http://www.fourmilab.ch/md5/)
+ * 7zip: [](http://www.7-zip.org/)
+ * mkisofs: [](http://sourceforge.net/projects/cdrtoolswin/)
+
+
+  ./build.sh
+
     sudo apt-get install genisoimage
     sudo apt-get install p7zip-full
     
