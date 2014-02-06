@@ -129,7 +129,11 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   # stick in our new initrd.gz
   echo "Installing new initrd.gz ..."
   cd "${FOLDER_ISO_INITRD}"
-  gunzip -c "${FOLDER_ISO_CUSTOM}/install/initrd.gz.org" | cpio -i --make-directories || true
+  if [ "$OSTYPE" = "msys" ]; then
+    gunzip -c "${FOLDER_ISO_CUSTOM}/install/initrd.gz.org" | cpio -i --make-directories || true
+  else
+    gunzip -c "${FOLDER_ISO_CUSTOM}/install/initrd.gz.org" | cpio -id || true
+  fi
   cd "${FOLDER_BASE}"
   if [ "${PRESEED}" != "${DEFAULT_PRESEED}" ] ; then
     echo "Using custom preseed file ${PRESEED}"
