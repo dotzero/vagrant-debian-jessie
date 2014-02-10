@@ -2,7 +2,7 @@
 
 This script will:
 
- 1. download the `Debian 7.3 "Wheezy"` server, 64bit iso
+ 1. download the `Debian 7.4 "Wheezy"` server, 64bit iso
  2. ... do some magic to turn it into a vagrant box file
  3. output `debian-wheezy-64.box`
 
@@ -21,7 +21,7 @@ This should do everything you need. If you don't have `mkisofs` or `p7zip`, inst
 
     brew install cdrtools
     brew install p7zip
-    
+
 To add `debian-wheezy-64.box` with name `debian-wheezy` into vagrant:
 
     vagrant box add "debian-wheezy" debian-wheezy-64.box
@@ -42,14 +42,14 @@ To add `debian-wheezy-64.box` with name `debian-wheezy` into vagrant:
 ## Usage on Windows (under cygwin/git shell)
 
     ./build.sh
-  
+
 Tested under Windows 7 with this tools:
 
  * [cpio](http://gnuwin32.sourceforge.net/packages/cpio.htm)
  * [md5](http://www.fourmilab.ch/md5/)
  * [7zip](http://www.7-zip.org/)
  * [mkisofs](http://sourceforge.net/projects/cdrtoolswin/)
-    
+
 To add `debian-wheezy-64.box` with name `debian-wheezy` into vagrant:
 
     vagrant box add "debian-wheezy" debian-wheezy-64.box
@@ -71,6 +71,6 @@ The following variables are supported:
 
 ### Notes
 
-This script basted on original Carl's [repo](https://github.com/cal/vagrant-ubuntu-precise-64) and with some tweaks to be compatible Debian 7.3.
+This script basted on original Carl's [repo](https://github.com/cal/vagrant-ubuntu-precise-64) and with some tweaks to be compatible Debian 7.4.
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/dotzero/vagrant-debian-wheezy-64/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
