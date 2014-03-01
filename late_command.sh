@@ -24,6 +24,6 @@ update-grub
 # clean up
 apt-get clean
 
-#Reduce size of created box
+# Zero free space to aid VM compression
 dd if=/dev/zero of=/EMPTY bs=1M
 rm -f /EMPTY
