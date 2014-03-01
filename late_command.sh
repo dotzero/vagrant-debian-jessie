@@ -23,3 +23,7 @@ update-grub
 
 # clean up
 apt-get clean
+
+#Reduce size of created box
+dd if=/dev/zero of=/EMPTY bs=1M
+rm -f /EMPTY
