@@ -23,3 +23,7 @@ update-grub
 
 # clean up
 apt-get clean
+
+# Zero free space to aid VM compression
+dd if=/dev/zero of=/EMPTY bs=1M
+rm -f /EMPTY
