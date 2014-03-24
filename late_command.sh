@@ -14,7 +14,7 @@ chown -R vagrant:vagrant /home/vagrant/.ssh
 echo "UseDNS no" >> /etc/ssh/sshd_config
 
 # Install chef from omnibus
-curl -L https://www.getchef.com/chef/install.sh | sudo bash
+curl -L https://www.getchef.com/chef/install.sh | bash
 
 # display login promt after boot
 sed "s/quiet splash//" /etc/default/grub > /tmp/grub
