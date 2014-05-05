@@ -2,7 +2,7 @@
 
 This script will:
 
- 1. download the `Debian 7.4 "Wheezy"` server, 64bit iso
+ 1. download the `Debian 7.5 "Wheezy"` server, 64bit iso
  2. ... do some magic to turn it into a vagrant box file
  3. output `debian-wheezy-64.box`
 
@@ -71,6 +71,6 @@ The following variables are supported:
 
 ### Notes
 
-This script basted on original Carl's [repo](https://github.com/cal/vagrant-ubuntu-precise-64) and with some tweaks to be compatible Debian 7.4.
+This script basted on original Carl's [repo](https://github.com/cal/vagrant-ubuntu-precise-64) and with some tweaks to be compatible Debian.
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/dotzero/vagrant-debian-wheezy-64/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
