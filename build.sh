@@ -26,7 +26,7 @@ ISO_URL="http://cdimage.debian.org/debian-cd/7.5.0/amd64/iso-cd/debian-7.5.0-amd
 ISO_MD5="8fdb6715228ea90faba58cb84644d296"
 
 # location, location, location
-FOLDER_BASE=`pwd`
+FOLDER_BASE=$(pwd)
 FOLDER_ISO="${FOLDER_BASE}/iso"
 FOLDER_BUILD="${FOLDER_BASE}/build"
 FOLDER_VBOX="${FOLDER_BUILD}/vbox"
@@ -40,6 +40,7 @@ if [ "x${VM_GUI}" == "xyes" ] || [ "x${VM_GUI}" == "x1" ]; then
 else
   STARTVM="VBoxManage startvm ${BOX} --type headless"
 fi
+STOPVM="VBoxManage controlvm ${BOX} poweroff"
 
 # Env option: Use custom preseed.cfg or default
 DEFAULT_PRESEED="preseed.cfg"
@@ -65,6 +66,14 @@ else
 fi
 
 # start with a clean slate
+if VBoxManage list runningvms | grep "${BOX}" >/dev/null 2>&1; then
+  echo "Stopping vm ..."
+  ${STOPVM}
+fi
+if VBoxManage showvminfo "${BOX}" >/dev/null 2>&1; then
+  echo "Unregistering vm ..."
+  VBoxManage unregistervm "${BOX}" --delete
+fi
 if [ -d "${FOLDER_BUILD}" ]; then
   echo "Cleaning build directory ..."
   chmod -R u+w "${FOLDER_BUILD}"
@@ -77,10 +86,6 @@ fi
 if [ -f "${FOLDER_BASE}/${BOX}.box" ]; then
   echo "Removing old ${BOX}.box" ...
   rm "${FOLDER_BASE}/${BOX}.box"
-fi
-if VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
-  echo "Unregistering vm ..."
-  VBoxManage unregistervm "${BOX}" --delete
 fi
 
 # Setting things back up again
@@ -100,7 +105,7 @@ if [ ! -e "${ISO_FILENAME}" ]; then
 fi
 
 # make sure download is right...
-ISO_HASH=`$MD5 "${ISO_FILENAME}" | cut -d ' ' -f 1`
+ISO_HASH=$($MD5 "${ISO_FILENAME}" | cut -d ' ' -f 1)
 if [ "${ISO_MD5}" != "${ISO_HASH}" ]; then
   echo "ERROR: MD5 does not match. Got ${ISO_HASH} instead of ${ISO_MD5}. Aborting."
   exit 1
@@ -170,7 +175,7 @@ fi
 
 echo "Creating VM Box..."
 # create virtual machine
-if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
+if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>&1; then
   VBoxManage createvm \
     --name "${BOX}" \
     --ostype Debian_64 \
