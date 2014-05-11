@@ -4,6 +4,7 @@
 hash vagrant 2>/dev/null || { echo >&2 "ERROR: vagrant not found.  Aborting."; exit 1; }
 hash VBoxManage 2>/dev/null || { echo >&2 "ERROR: VBoxManage not found.  Aborting."; exit 1; }
 hash 7z 2>/dev/null || { echo >&2 "ERROR: 7z not found. Aborting."; exit 1; }
+hash curl 2>/dev/null || { echo >&2 "ERROR: curl not found. Aborting."; exit 1; }
 
 VBOX_VERSION="$(VBoxManage --version)"
 
