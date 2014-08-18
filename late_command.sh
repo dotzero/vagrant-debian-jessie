@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # passwordless sudo
-echo "%sudo   ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+echo "%sudo   ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # public ssh key for vagrant user
 mkdir /home/vagrant/.ssh
