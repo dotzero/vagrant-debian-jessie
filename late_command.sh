@@ -13,6 +13,13 @@ chown -R vagrant:vagrant /home/vagrant/.ssh
 # speed up ssh
 echo "UseDNS no" >> /etc/ssh/sshd_config
 
+# installs virtualbox guest additions
+if [ -d /tmp/vboxga ]; then
+  apt-get remove --purge -y virtualbox-*
+  /bin/bash /tmp/vboxga/VBoxLinuxAdditions.run
+  echo rm -rf /tmp/vboxga
+fi
+
 # Install chef from omnibus
 curl -L https://www.getchef.com/chef/install.sh | bash
 
