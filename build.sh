@@ -23,8 +23,8 @@ set -o errexit
 
 # Configurations
 BOX="debian-wheezy-64"
-ISO_URL="http://cdimage.debian.org/debian-cd/7.7.0/amd64/iso-cd/debian-7.7.0-amd64-netinst.iso"
-ISO_MD5="0b31bccccb048d20b551f70830bb7ad0"
+ISO_URL="http://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-7.8.0-amd64-netinst.iso"
+ISO_MD5="a91fba5001cf0fbccb44a7ae38c63b6e"
 
 # location, location, location
 FOLDER_BASE=$(pwd)
