@@ -19,12 +19,12 @@ fi
 
 set -o nounset
 set -o errexit
-#set -o xtrace
+set -o xtrace
 
 # Configurations
-BOX="debian-wheezy-64"
-ISO_URL="http://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-7.8.0-amd64-netinst.iso"
-ISO_MD5="a91fba5001cf0fbccb44a7ae38c63b6e"
+BOX="debian-jessie"
+ISO_URL="http://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-8.0.0-amd64-netinst.iso"
+ISO_MD5="d9209f355449fe13db3963571b1f52d4"
 
 # location, location, location
 FOLDER_BASE=$(pwd)
