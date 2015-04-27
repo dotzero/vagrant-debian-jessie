@@ -1,3 +1,8 @@
+# Looking for Debian 8.0 "Jessie" ?
+
+Automatic Debian 8 Vagrant base box building on OSX, Linux and Windows
+[https://github.com/dotzero/vagrant-debian-jessie](https://github.com/dotzero/vagrant-debian-jessie)
+
 ## About
 
 This script will:
