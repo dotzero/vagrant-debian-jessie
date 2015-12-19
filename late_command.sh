@@ -29,6 +29,7 @@ sed "s/GRUB_TIMEOUT=[0-9]/GRUB_TIMEOUT=0/" /tmp/grub > /etc/default/grub
 update-grub
 
 # clean up
+apt-get autoremove --purge -y
 apt-get clean
 
 # Zero free space to aid VM compression
