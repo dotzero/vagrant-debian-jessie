@@ -2,7 +2,7 @@
 
 This script will:
 
- 1. download the `Debian 8.3 "Jessie"` server, 64bit iso
+ 1. download the `Debian 8.4 "Jessie"` server, 64bit iso
  2. ... do some magic to turn it into a vagrant box file
  3. output `debian-jessie.box`
 
