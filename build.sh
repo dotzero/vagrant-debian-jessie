@@ -24,8 +24,8 @@ set -o xtrace
 
 # Configurations
 BOX="debian-jessie"
-ISO_URL="http://cdimage.debian.org/debian-cd/8.3.0/amd64/iso-cd/debian-8.3.0-amd64-netinst.iso"
-ISO_MD5="a9b490b4215d1e72e876b031dafa7184"
+ISO_URL="http://cdimage.debian.org/debian-cd/8.4.0/amd64/iso-cd/debian-8.4.0-amd64-netinst.iso"
+ISO_MD5="8d52d1b7789cd5a464aae719f05299ec"
 
 # location, location, location
 FOLDER_BASE=$(pwd)
