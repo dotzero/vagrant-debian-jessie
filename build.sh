@@ -148,6 +148,17 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   echo "Using 7zip"
   7z x "${ISO_FILENAME}" -o"${FOLDER_ISO_CUSTOM}"
 
+  # if virtualbox guest additions were found, include them
+  VBOXGA_FILENAME=$(
+    VBoxManage list dvds \
+      | grep -E 'Location:.+VBoxGuestAdditions.iso$' \
+      | awk '{ print $2 }'
+  )
+  if [ ! x"${VBOXGA_FILENAME}" == x"" ]; then
+    echo "Including Virtualbox Guest Additions into Custom ISO"
+    7z x "${VBOXGA_FILENAME}" -o"${FOLDER_ISO_CUSTOM}/vboxga"
+  fi
+
   # If that didn't work, you have to update p7zip
   if [ ! -e $FOLDER_ISO_CUSTOM ]; then
     echo "Error with extracting the ISO file with your version of p7zip. Try updating to the latest version."
