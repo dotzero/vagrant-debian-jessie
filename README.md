@@ -2,7 +2,7 @@
 
 This script will:
 
- 1. download the `Debian 8.4 "Jessie"` server, 64bit iso
+ 1. download the latest version of `Debian "Jessie"` server iso
  2. ... do some magic to turn it into a vagrant box file
  3. output `debian-jessie.box`
 
@@ -61,6 +61,10 @@ You can affect the default behaviour of the script using environment variables:
     VAR=value ./build.sh
 
 The following variables are supported:
+
+* `ARCH` - Architecture to build. Either `i386` or `amd64`. Default is `amd64`.
+
+* `DEBIAN_CDIMAGE` - Domain to download the Debian installer from. Default is `cdimage.debian.org`. Example: `ftp.de.debian.org`.
 
 * `PRESEED` — path to custom preseed file. May be useful when if you need some customizations for your private base box (user name, passwords etc.);
 

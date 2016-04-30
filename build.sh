@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -o nounset
+set -o errexit
+# set -o xtrace
+
 # make sure we have dependencies
 hash vagrant 2>/dev/null || { echo >&2 "ERROR: vagrant not found.  Aborting."; exit 1; }
 hash VBoxManage 2>/dev/null || { echo >&2 "ERROR: VBoxManage not found.  Aborting."; exit 1; }
@@ -18,14 +22,18 @@ else
   exit 1
 fi
 
-set -o nounset
-set -o errexit
-set -o xtrace
+if [ "$OSTYPE" = "linux-gnu" ]; then
+  SED="$(which sed) -r"
+  MD5="md5sum"
+elif [ "$OSTYPE" = "msys" ]; then
+  SED="$(which sed) -r"
+  MD5="md5 -l"
+else
+  SED="$(which sed) -E"
+  MD5="md5 -q"
+fi
 
 # Configurations
-BOX="debian-jessie"
-ISO_URL="http://cdimage.debian.org/debian-cd/8.4.0/amd64/iso-cd/debian-8.4.0-amd64-netinst.iso"
-ISO_MD5="8d52d1b7789cd5a464aae719f05299ec"
 
 # location, location, location
 FOLDER_BASE=$(pwd)
@@ -34,6 +42,34 @@ FOLDER_BUILD="${FOLDER_BASE}/build"
 FOLDER_VBOX="${FOLDER_BUILD}/vbox"
 FOLDER_ISO_CUSTOM="${FOLDER_BUILD}/iso/custom"
 FOLDER_ISO_INITRD="${FOLDER_BUILD}/iso/initrd"
+
+# Env option: architecture (i386 or amd64)
+ARCH=${ARCH:-amd64}
+
+# Env option: Debian CD image mirror; default is http://cdimage.debian.org/debian-cd/
+DEBIAN_CDIMAGE=${DEBIAN_CDIMAGE:-cdimage.debian.org}
+DEBIAN_CDIMAGE_URL="http://${DEBIAN_CDIMAGE}/debian-cd/"
+# Check if the Debian version is set manually (ie. DEBVER="8.4.0") or use the latest version
+if [ -z ${DEBVER+x} ]; then
+  DEBVER=$(curl -sS ${DEBIAN_CDIMAGE_URL} | grep -E ">[0-9]+\.[0-9]\.[0-9]/<" | ${SED} 's/.*>([0-9]+\.[0-9]\.[0-9])\/<.*/\1/')
+  echo "Detected latest Debian version \"$DEBVER\" from $DEBIAN_CDIMAGE_URL"
+else
+  echo "Using Debian version \"$DEBVER\""
+fi
+
+# Env option: the vagrant box name; default is debian-jessie-$ARCH
+BOX=${BOX:-debian-jessie-${ARCH}}
+
+ISO_FILE="debian-${DEBVER}-${ARCH}-netinst.iso"
+ISO_BASEURL="${DEBIAN_CDIMAGE_URL}${DEBVER}/${ARCH}/iso-cd"
+ISO_URL="${ISO_BASEURL}/${ISO_FILE}"
+ISO_MD5=$(curl -sS ${ISO_BASEURL}/MD5SUMS | grep ${ISO_FILE} | cut -f1 -d" ")
+
+if [ "$ARCH" = "amd64" ]; then
+  VBOX_OSTYPE=Debian_64
+else
+  VBOX_OSTYPE=Debian
+fi
 
 # Env option: Use headless mode or GUI
 VM_GUI="${VM_GUI:-}"
@@ -57,14 +93,6 @@ if [[ "$VBOX_VERSION" < 4.3 ]]; then
   PORTCOUNT="--sataportcount 1"
 else
   PORTCOUNT="--portcount 1"
-fi
-
-if [ "$OSTYPE" = "linux-gnu" ]; then
-  MD5="md5sum"
-elif [ "$OSTYPE" = "msys" ]; then
-  MD5="md5 -l"
-else
-  MD5="md5 -q"
 fi
 
 # start with a clean slate
@@ -180,7 +208,7 @@ echo "Creating VM Box..."
 if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>&1; then
   VBoxManage createvm \
     --name "${BOX}" \
-    --ostype Debian_64 \
+    --ostype "${VBOX_OSTYPE}" \
     --register \
     --basefolder "${FOLDER_VBOX}"
 
