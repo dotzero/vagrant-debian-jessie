@@ -81,7 +81,7 @@ fi
 STOPVM="VBoxManage controlvm ${BOX} poweroff"
 
 # Env option: Use custom preseed.cfg or default
-DEFAULT_PRESEED="preseed.cfg"
+DEFAULT_PRESEED="${FOLDER_BASE}/preseed.cfg"
 PRESEED="${PRESEED:-"$DEFAULT_PRESEED"}"
 
 # Env option: Use custom late_command.sh or default
@@ -125,7 +125,7 @@ mkdir -p "${FOLDER_VBOX}"
 mkdir -p "${FOLDER_ISO_CUSTOM}"
 mkdir -p "${FOLDER_ISO_INITRD}"
 
-ISO_FILENAME="${FOLDER_ISO}/`basename ${ISO_URL}`"
+ISO_FILENAME="${FOLDER_ISO}/${ISO_FILE}"
 INITRD_FILENAME="${FOLDER_ISO}/initrd.gz"
 
 # download the installation disk if you haven't already or it is corrupted somehow
@@ -186,7 +186,7 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   cd "${FOLDER_BASE}"
   chmod u+w "${FOLDER_ISO_CUSTOM}/isolinux" "${FOLDER_ISO_CUSTOM}/isolinux/isolinux.cfg"
   rm "${FOLDER_ISO_CUSTOM}/isolinux/isolinux.cfg"
-  cp isolinux.cfg "${FOLDER_ISO_CUSTOM}/isolinux/isolinux.cfg"
+  cp ${FOLDER_BASE}/isolinux.cfg "${FOLDER_ISO_CUSTOM}/isolinux/isolinux.cfg"
   chmod u+w "${FOLDER_ISO_CUSTOM}/isolinux/isolinux.bin"
 
   # add late_command script
@@ -195,7 +195,7 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
   cp "${LATE_CMD}" "${FOLDER_ISO_CUSTOM}/late_command.sh"
 
   echo "Running mkisofs ..."
-  "$MKISOFS" -r -V "Custom Debian Install CD" \
+  "$MKISOFS" -r -V "Custom Debian $DEBVER $ARCH CD" \
     -cache-inodes -quiet \
     -J -l -b isolinux/isolinux.bin \
     -c isolinux/boot.cat -no-emul-boot \
@@ -203,9 +203,9 @@ if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
     -o "${FOLDER_ISO}/custom.iso" "${FOLDER_ISO_CUSTOM}"
 fi
 
-echo "Creating VM Box..."
 # create virtual machine
 if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>&1; then
+  echo "Creating VM Box ${BOX}..."
   VBoxManage createvm \
     --name "${BOX}" \
     --ostype "${VBOX_OSTYPE}" \
@@ -270,8 +270,17 @@ if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>&1; then
     --medium emptydrive
 fi
 
-echo "Building Vagrant Box ..."
+echo "Building Vagrant Box ${BOX}..."
 vagrant package --base "${BOX}" --output "${BOX}.box"
+
+if [ -d "${FOLDER_BUILD}" ]; then
+  echo "Cleaning build directory ..."
+  chmod -R u+w "${FOLDER_BUILD}"
+  rm -rf "${FOLDER_BUILD}"
+fi
+
+echo "DONE. To add ${BOX}.box with name debian-jessie into vagrant, just run:"
+echo "vagrant box add \"debian-jessie\" ${BOX}.box"
 
 # references:
 # http://blog.ericwhite.ca/articles/2009/11/unattended-debian-lenny-install/
